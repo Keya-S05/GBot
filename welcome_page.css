@@ -1,0 +1,103 @@
+/* General Styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Arial', sans-serif;
+    background-color: #111; /* Dark background */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Welcome Container */
+.welcome-container {
+    text-align: center;
+    padding: 50px;
+    border: 3px solid #555;
+    border-radius: 20px;
+    background-color: #222;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+    animation: fadeIn 2s ease-out;
+    z-index: 2;
+}
+
+/* Fade-in Animation for Welcome Container */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Heading Styles */
+h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 600;
+    margin-bottom: 30px;
+    animation: fadeInUp 2s ease-out;
+    color: #fff;
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Button Styles */
+.cta-button {
+    padding: 15px 30px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #555;
+    transform: scale(1.1);
+}
+
+/* Ball Animation */
+.ball {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* Ball Color Classes */
+.ball1 { background-color: #FF6EC7; }
+.ball2 { background-color: #00BFFF; }
+.ball3 { background-color: #32CD32; }
+.ball4 { background-color: #FFD700; }
+.ball5 { background-color: #FF6347; }
+.ball6 { background-color: #8A2BE2; }
+.ball7 { background-color: #FF4500; }
+.ball8 { background-color: #ADFF2F; }
+
+/* Media Queries for Mobile */
+@media (max-width: 768px) {
+    .welcome-container {
+        width: 90%;
+        padding: 30px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .cta-button {
+        font-size: 1.2rem;
+        padding: 12px 25px;
+    }
+}
