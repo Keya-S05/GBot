@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GBot Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            height: 100%;
+            background-color: #f4f4f4; /* Light gray background */
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        /* Chat Container */
+        .chat-container {
+            width: 100vw; /* Full width of the viewport */
+            height: 100vh; /* Full height of the viewport */
+            background-color: #fff;
+            border-radius: 0; /* No border radius */
+            box-shadow: none; /* No shadow */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header with Robot Face */
+        .chat-header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 25px;
+            font-size: 2rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .robot-face {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #FF6347; /* Coral robot face */
+            margin-right: 15px;
+            animation: pulse 1.2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                background-color: #FF6347;
+            }
+            50% {
+                transform: scale(1.1);
+                background-color: #FFD700;
+            }
+            100% {
+                transform: scale(1);
+                background-color: #FF6347;
+            }
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #f8f8f8;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chat-message {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .chat-message.bot {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 70%;
+            font-size: 1.1rem;
+        }
+
+        .user .message-bubble {
+            background-color: #00BFFF;
+            color: #fff;
+        }
+
+        .bot .message-bubble {
+            background-color: #E8E8E8;
+            color: #333;
+        }
+
+        /* Typing Dots */
+        .typing-dots {
+            display: inline-block;
+            margin-left: 10px;
+            visibility: hidden;
+        }
+
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin-right: 6px;
+            border-radius: 50%;
+            background-color: #00BFFF;
+            animation: typing 1.5s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes typing {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Input Area */
+        .input-area {
+            display: flex;
+            padding: 20px;
+            background-color: #fff;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .input-area input {
+            width: 80%;
+            padding: 14px;
+            border: 2px solid #ccc;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            margin-right: 20px;
+            outline: none;
+            background-color: #fff;
+            transition: border 0.3s ease;
+        }
+
+        .input-area input:focus {
+            border: 2px solid #00BFFF;
+        }
+
+        .input-area button {
+            padding: 14px 22px;
+            background-color: #00BFFF;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+        }
+
+        .input-area button:hover {
+            background-color: #0079B1;
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 100vw;
+                height: 100vh;
+            }
+
+            .chat-header {
+                font-size: 1.8rem;
+            }
+
+            .input-area input {
+                font-size: 1rem;
+            }
+
+            .input-area button {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Chatbot Container -->
+    <div class="chat-container">
+        <!-- Chat Header with Robot Face -->
+        <div class="chat-header">
+            <div class="robot-face"></div>
+            <div>GBot</div>
+        </div>
+
+        <!-- Chat Area -->
+        <div class="chat-area" id="chatArea">
+            <div class="chat-message bot">
+                <div class="message-bubble">Hello! How can I assist you today?</div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type your message..." />
+            <button id="sendButton">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Get references to elements
+        const chatArea = document.getElementById('chatArea');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Simulate typing animation
+        function typingAnimation() {
+            const typingMessage = document.createElement('div');
+            typingMessage.classList.add('chat-message', 'bot');
+            typingMessage.innerHTML = `
+                <div class="message-bubble">
+                    <div class="typing-dots">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            `;
+            chatArea.appendChild(typingMessage);
+            chatArea.scrollTop = chatArea.scrollHeight; // Auto-scroll to the latest message
+        }
+
+        // Simulate bot response after user input
+        function botResponse(message) {
+            setTimeout(() => {
+                // Remove typing dots
+                const typingDots = document.querySelector('.typing-dots');
+                if (typingDots) {
+                    typingDots.parentElement.remove();
+                }
+
+                // Create bot response message
+                const botMessage = document.createElement('div');
+                botMessage.classList.add('chat-message', 'bot');
+                botMessage.innerHTML = `
+                    <div class="message-bubble">${message}</div>
+                `;
+                chatArea.appendChild(botMessage);
+                chatArea.scrollTop = chatArea.scrollHeight; // Auto-scroll to the latest message
+            }, 2000); // Simulate typing delay
+        }
+
+        // Handle send button click
+        sendButton.addEventListener('click', () => {
+            const userText = userInput.value.trim();
+            if (userText) {
+                // Display user message
+                const userMessage = document.createElement('div');
+                userMessage.classList.add('chat-message', 'user');
+                userMessage.innerHTML = `
+                    <div class="message-bubble">${userText}</div>
+                `;
+                chatArea.appendChild(userMessage);
+
+                // Clear the input field
+                userInput.value = '';
+
+                // Simulate bot typing and respond
+                typingAnimation();
+                botResponse('This is a bot response.');
+            }
+        });
+
+        // Handle enter key press for sending message
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+    </script>
+
+</body>
+</html>
